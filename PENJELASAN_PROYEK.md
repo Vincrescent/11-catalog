@@ -1,173 +1,86 @@
-# 📚 Penjelasan Lengkap Proyek Full-Stack Katalog Produk (Product Catalog Studio)
+# Penjelasan Proyek Katalog Produk
 
-Dokumen ini berisi penjelasan komprehensif mengenai arsitektur, penjelasan kode, struktur folder, serta tautan repositori GitHub dari aplikasi **Product Catalog Studio** yang dibangun dengan **NestJS (Backend API)** dan **React + Vite (Frontend SPA)**.
+## 1. Penjelasan Kode dan Arsitektur
+
+### Backend API (NestJS Framework)
+
+Backend menggunakan arsitektur modular yang memisahkan tanggung jawab kode menjadi Controller, Service, DTO, dan Entity.
+
+- main.ts: Merupakan file entry point utama NestJS. Di dalam file ini, aplikasi diinisialisasi, mengaktifkan ValidationPipe secara global untuk memvalidasi masukan data, mengonfigurasi CORS untuk mengizinkan request dari frontend port 5188, dan menjalankan server pada port 3090.
+- app.module.ts: Root module yang mengimpor dan mendaftarkan ProductModule sebagai modul utama aplikasi.
+- product.entity.ts: Mendefinisikan struktur data resmi produk yang terdiri dari atribut id, name, category, price, stock, rating, description, imageUrl, isAvailable, createdAt, dan updatedAt.
+- create-product.dto.ts: Berisi skema validasi Data Transfer Object menggunakan class-validator. Memastikan nama dan kategori tidak kosong, harga dan stok tidak bernilai negatif, serta rating berada dalam rentang 0.0 hingga 5.0.
+- update-product.dto.ts: Turunan dari CreateProductDto dengan sifat opsional (PartialType) untuk kebutuhan pembaharuan data produk.
+- product.service.ts: Berisi logika bisnis dan penyimpan data sementara (in-memory storage). Menyediakan fungsi pencarian (findAll) dengan dukungan pencarian kata kunci dan filter kategori/stok, pencarian detail (findOne), penambahan produk baru (create), pembaharuan data (update), dan penghapusan produk (remove).
+- product.controller.ts: Menangani HTTP Request pada endpoint /api/v1/products dan mengarahkan pemanggilan fungsi ke ProductService.
+
+### Frontend Client (React + Vite)
+
+Frontend dibangun dengan React 18 dan Vite menggunakan pendekatan komponen modular dan antarmuka pengguna responsif.
+
+- axiosInstance.js: Mengonfigurasi instance Axios dengan baseURL http://localhost:3090. Dilengkapi interceptor untuk mencetak log HTTP request/response pada konsol browser serta menangani error secara terpusat.
+- ProductCatalog.jsx: Halaman utama aplikasi yang mengelola state daftar produk, kata kunci pencarian, filter kategori, status ketersediaan stok, serta modal form. Juga menghitung statistik header seperti total produk, total stok, rata-rata rating, dan produk stok habis.
+- ProductCard.jsx: Komponen kartu visual untuk setiap produk. Menampilkan foto produk, badge kategori, badge status stok, harga dalam format Rupiah (IDR), rating bintang, serta tombol kontrol stok interaktif (+ dan -).
+- ProductForm.jsx: Komponen form di dalam modal untuk menambah dan mengedit produk lengkap dengan validasi di sisi klien sebelum dikirim ke API backend.
+- index.css: Berisi variabel warna CSS, sistem grid responsif, kartu produk, efek hover, dan animasi modal.
 
 ---
 
-## 🔗 1. Tautan Repositori GitHub
+## 2. Kesimpulan
 
-- **GitHub Repository**: [https://github.com/Vincrescent/11-catalog](https://github.com/Vincrescent/11-catalog)
-- **Branch Utama**: `main`
+Aplikasi telah berhasil ditransformasikan secara penuh dari aplikasi Todo List menjadi Aplikasi Katalog Produk full-stack yang modern dan fungsional.
+Backend NestJS mampu menyediakan REST API yang stabil pada port 3090 dengan validasi DTO yang ketat.
+Frontend React memberikan pengalaman pengguna yang interaktif dengan pencarian realtime, filter kategori, format harga IDR, indikator stok interaktif, dan notifikasi toast.
+Seluruh arsitektur disusun secara modular sehingga mudah untuk dikembangkan lebih lanjut di masa mendatang.
 
 ---
 
-## 📁 2. Struktur Folder Proyek
+## 3. Link GitHub
+
+https://github.com/Vincrescent/11-catalog
+
+---
+
+## 4. Struktur Folder
 
 ```text
 d:\PWEB\11\
-├── PENJELASAN_PROYEK.md         # Dokumen penjelasan kode & proyek
-├── README.md                    # Dokumentasi utama proyek & panduan instalasi
-├── .gitignore                   # Konfigurasi file yang diabaikan git
+├── PENJELASAN_PROYEK.md
+├── README.md
+├── .gitignore
 │
-├── todo-api/                    # BACKEND API (NestJS Framework)
-│   ├── package.json             # Dependensi & skrip backend
-│   ├── tsconfig.json            # Konfigurasi TypeScript backend
+├── todo-api/
+│   ├── package.json
+│   ├── tsconfig.json
 │   └── src/
-│       ├── main.ts              # Entry point bootstrap NestJS (CORS, Pipes, Port 3090)
-│       ├── app.module.ts        # Root module penampung ProductModule
-│       └── product/             # Modul Fitur Produk (Domain Product)
-│           ├── product.module.ts        # Deklarasi modul Product
-│           ├── product.controller.ts    # Layer Controller REST API (/api/v1/products)
-│           ├── product.service.ts       # Layer Business Logic & In-Memory Storage
-│           ├── dto/                     # Data Transfer Objects & Validation
-│           │   ├── create-product.dto.ts # Validasi input pembuatan produk
-│           │   └── update-product.dto.ts # Validasi input pembaharuan produk
-│           └── entities/                # Schema Entity / Model Data
-│               └── product.entity.ts    # Class definisi tipe data Product
+│       ├── main.ts
+│       ├── app.module.ts
+│       └── product/
+│           ├── product.module.ts
+│           ├── product.controller.ts
+│           ├── product.service.ts
+│           ├── dto/
+│           │   ├── create-product.dto.ts
+│           │   └── update-product.dto.ts
+│           └── entities/
+│               └── product.entity.ts
 │
-└── todo-frontend/               # FRONTEND SPA (React.js + Vite)
-    ├── package.json             # Dependensi (React, Lucide Icons, Axios) & Script Dev (Port 5188)
-    ├── vite.config.js           # Konfigurasi Vite dev server
-    ├── index.html               # Entry Point HTML
+└── todo-frontend/
+    ├── package.json
+    ├── vite.config.js
+    ├── index.html
     └── src/
-        ├── main.jsx             # Entry Point React DOM Render
-        ├── App.jsx              # Komponen utama pembungkus halaman
-        ├── index.css            # Design System (CSS Variables, Grid, Card, Animations)
+        ├── main.jsx
+        ├── App.jsx
+        ├── index.css
         ├── api/
-        │   └── axiosInstance.js # Instance Axios + Interceptors (Logging & Handling)
-        ├── components/          # Reusable UI Components
-        │   ├── ProductCard.jsx   # Card visual produk (Gambar, Badge, Harga IDR, Stok)
-        │   ├── ProductForm.jsx   # Form modal Tambah/Edit Produk dengan validasi
-        │   ├── Modal.jsx         # Component Modal dialog generik
-        │   ├── ConfirmModal.jsx  # Component Modal dialog konfirmasi hapus
-        │   └── Toast.jsx         # Component Pop-up notifikasi real-time
+        │   └── axiosInstance.js
+        ├── components/
+        │   ├── ProductCard.jsx
+        │   ├── ProductForm.jsx
+        │   ├── Modal.jsx
+        │   ├── ConfirmModal.jsx
+        │   └── Toast.jsx
         └── pages/
-            └── ProductCatalog.jsx # Halaman utama (Stats overview, Search, Filter, Grid)
+            └── ProductCatalog.jsx
 ```
-
----
-
-## 💻 3. Penjelasan Kode & Arsitektur (Code Explanation)
-
-### A. Arsitektur Backend (NestJS API)
-
-Backend dibangun menggunakan pola arsitektur **Modular Architecture (Controller-Service-DTO-Entity)** yang dipromosikan oleh NestJS.
-
-#### 1. Bootstrap Server (`todo-api/src/main.ts`)
-```typescript
-const app = await NestFactory.create(AppModule);
-app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-app.enableCors({ origin: ['http://localhost:5188', 'http://127.0.0.1:5188'] });
-const port = process.env.PORT || 3090;
-await app.listen(port);
-```
-- **Fungsi**: Menginisialisasi aplikasi NestJS, menerapkan `ValidationPipe` secara global untuk sanitasi data masukan, mengkonfigurasi `CORS` agar mengizinkan request dari frontend pada port `5188`, serta menetapkan port server berjalan di **3090**.
-
-#### 2. Entitas Produk (`todo-api/src/product/entities/product.entity.ts`)
-```typescript
-export class Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  stock: number;
-  rating: number;
-  description: string;
-  imageUrl: string;
-  isAvailable: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
-```
-- **Fungsi**: Mendefinisikan struktur data resmi produk yang disimpan dan diproses oleh aplikasi.
-
-#### 3. Data Transfer Object & Validasi (`todo-api/src/product/dto/create-product.dto.ts`)
-```typescript
-export class CreateProductDto {
-  @IsString() @IsNotEmpty() name: string;
-  @IsString() @IsNotEmpty() category: string;
-  @IsNumber() @Min(0) price: number;
-  @IsNumber() @Min(0) stock: number;
-  @IsNumber() @Min(0) @Max(5) @IsOptional() rating?: number;
-  @IsString() @IsOptional() description?: string;
-  @IsString() @IsOptional() imageUrl?: string;
-}
-```
-- **Fungsi**: Memastikan setiap data yang dikirim melalui *request body* saat menambah/mengedit produk tervalidasi dengan ketat (mencegah string kosong, harga/stok negatif, atau nilai rating di luar jangkauan 0-5).
-
-#### 4. Service / Business Logic (`todo-api/src/product/product.service.ts`)
-- **Fungsi**: Mengelola array data in-memory produk. Menyediakan fungsi-fungsi utama:
-  - `findAll(category, availableOnly, search)`: Menyaring data berdasarkan kategori produk, ketersediaan stok, dan kata kunci pencarian pada nama/deskripsi.
-  - `findOne(id)`: Mencari detail produk spesifik atau melempar `NotFoundException` (404) jika tidak ada.
-  - `create(dto)`: Menambahkan produk baru, mengatur waktu `createdAt`, dan menghitung status `isAvailable` berdasarkan jumlah stok.
-  - `update(id, dto)`: Memperbarui data produk dan mengkalkulasi ulang `isAvailable`.
-  - `remove(id)`: Menghapus produk dari repositori data.
-
-#### 5. Controller REST API (`todo-api/src/product/product.controller.ts`)
-```typescript
-@Controller('api/v1/products')
-export class ProductController {
-  @Get() findAll(...)
-  @Get(':id') findOne(...)
-  @Post() create(...)
-  @Put(':id') update(...)
-  @Delete(':id') remove(...)
-}
-```
-- **Fungsi**: Memetakan HTTP request ke fungsi yang ada pada `ProductService` untuk menghasilkan respon JSON standar RESTful API.
-
----
-
-### B. Arsitektur Frontend (React SPA)
-
-Frontend dibangun dengan **React 18 (Vite)** menerapkan prinsip *Component-Driven Architecture* dan desain visual *Nordic Minimalist Studio*.
-
-#### 1. Centralized HTTP Client (`todo-frontend/src/api/axiosInstance.js`)
-```javascript
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3090';
-const api = axios.create({ baseURL: API_BASE_URL });
-```
-- **Fungsi**: Konfigurasi basis Axios yang dilengkapi *Interceptors* untuk mencetak log HTTP request/response pada konsol browser dan menangani pesan kesalahan (*error handling*) secara terpusat.
-
-#### 2. Main Page State & Layout (`todo-frontend/src/pages/ProductCatalog.jsx`)
-- **Fungsi**: Menjadi kontainer utama aplikasi yang mengendalikan state:
-  - `products`: Daftar array produk yang diambil dari backend.
-  - `selectedCategory` & `searchTerm` & `availableOnly`: State filter interaktif.
-  - `modalOpen` & `editingProduct`: State untuk pengontrol dialog Modal Form.
-  - `stats`: Kalkulasi matematis (*useMemo*) untuk statistik header (Total Produk, Total Unit Stok, Average Rating, Produk Stok Habis).
-
-#### 3. Component Product Card (`todo-frontend/src/components/ProductCard.jsx`)
-```javascript
-const formatRupiah = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
-```
-- **Fungsi**: Menampilkan visualisasi tiap unit produk dalam bentuk card yang kaya informasi:
-  - Format mata uang Rupiah (IDR).
-  - Badge Kategori & Indikator Stok (*Tersedia* vs *Stok Habis*).
-  - Rating bintang (⭐).
-  - Tombol cepat penambahan/pengurangan jumlah stok (*Quick Stock Adjust*).
-  - Akses modal Edit dan Hapus produk.
-
-#### 4. Component Product Form Modal (`todo-frontend/src/components/ProductForm.jsx`)
-- **Fungsi**: Form interaktif di dalam modal untuk operasi **Create (POST)** dan **Update (PUT)**. Memiliki fitur validasi formulir di sisi klien (*client-side validation*) sebelum mengirimkan permintaan HTTP ke API backend.
-
-#### 5. Custom Design System (`todo-frontend/src/index.css`)
-- **Fungsi**: Menerapkan variabel CSS kustom (`--emerald-600`, `--bg-main`, `--radius-lg`, `--shadow-emerald`), tata letak CSS Grid yang responsif, efek hover mikro-animasi, serta estetika visual premium.
-
----
-
-## 🎯 4. Kesimpulan (Conclusion)
-
-1. **Transformasi Sukses**: Aplikasi telah berhasil ditransformasikan secara penuh dari aplikasi *Todo List* sederhana menjadi **Aplikasi Katalog Produk (Product Catalog Studio)** full-stack yang modern dan fungsional.
-2. **REST API Terstruktur**: Backend NestJS menyediakan layanan API yang aman, menggunakan validasi DTO ketat, dan merespon dengan format JSON standar pada port `3090`.
-3. **Pengalaman Pengguna (UX) Premium**: Frontend React memberikan pengalaman interaktif melalui pencarian realtime, filter kategori instant, indikator stok interaktif, notifikasi toast, serta antarmuka visual bergaya *Nordic Minimalist & Emerald Studio*.
-4. **Siap Dikembangkan**: Struktur kode yang modular membuat proyek ini sangat mudah untuk diintegrasikan lebih lanjut dengan basis data permanen seperti PostgreSQL/MongoDB maupun payment gateway e-commerce di masa depan.
