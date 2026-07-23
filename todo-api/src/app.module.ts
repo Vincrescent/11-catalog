@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
-import { TodoModule } from './todo/todo.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [TodoModule],
-  controllers: [],
-  providers: [],
+  imports: [ProductModule],
 })
 export class AppModule {}

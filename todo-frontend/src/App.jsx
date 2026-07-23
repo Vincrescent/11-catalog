@@ -1,10 +1,10 @@
-import TodoList from './pages/TodoList';
+import ProductCatalog from './pages/ProductCatalog';
 
 function App() {
   return (
-    <main>
-      <TodoList />
-    </main>
+    <div className="app-main">
+      <ProductCatalog />
+    </div>
   );
 }
 

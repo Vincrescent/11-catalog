@@ -18,6 +18,8 @@ async function bootstrap() {
   );
 
   const corsOrigins = [
+    'http://localhost:5188',
+    'http://127.0.0.1:5188',
     'http://localhost:5174',
     'http://127.0.0.1:5174',
     'http://localhost:5173',
@@ -30,7 +32,7 @@ async function bootstrap() {
     credentials: true,
   });
 
-  const port = process.env.PORT || 3005;
+  const port = process.env.PORT || 3090;
   await app.listen(port);
   console.log(`🚀 NestJS Backend Todo API berjalan di: http://localhost:${port}`);
 }
